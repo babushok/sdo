@@ -90,7 +90,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    static auto channel_state_string(state state)
+    static auto channel_state_string(Channel::state state)
     {
         static const std::map<Channel::state, std::string> channel_state_strings = {{state::error_state,   "error_state"},
                                                                                     {state::idle_state,    "idle_state"},
