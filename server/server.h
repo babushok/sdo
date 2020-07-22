@@ -175,7 +175,7 @@ public:
 
                 exit(0);
             }
-            close(client_sock);  // parent doesn't need this
+            close(client_sock);
         }
     }
 

@@ -2,10 +2,6 @@
 
 int main()
 {
-//--Win32------------------------------
-//    init_syslog("localhost");
-//-------------------------------------
-
     Server server;
 
     auto result = server.init();
@@ -18,10 +14,6 @@ int main()
     }
 
     server.run();
-
-//--Win32------------------------------
-//    exit_syslog();
-//-------------------------------------
 
     return 0;
 }
