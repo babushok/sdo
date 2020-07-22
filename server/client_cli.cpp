@@ -1,7 +1,10 @@
+//------------------------------------------------------------------------------
+
 #include <iostream>
 
 #include "client.h"
 
+//------------------------------------------------------------------------------
 
 int main()
 {
@@ -31,11 +34,13 @@ int main()
 
         auto reply = client.request(request_string);
 
-        if (Error::success(std::get<0>(reply)))
-            std::cout << "Client: recv() << \033[1;33m" << std::get<1>(reply) << "\033[0m";
+        if (Error::success(std::get<ERROR_POS>(reply)))
+            std::cout << "Client: recv() << \033[1;33m" << std::get<VALUE_POS>(reply) << "\033[0m";
         else
-            std::cout << "Client: << \033[31m" << Error::strerror(std::get<0>(reply)) << "\033[0m";
+            std::cout << "Client: << \033[31m" << Error::strerror(std::get<ERROR_POS>(reply)) << "\033[0m";
     }
 
     return 0;
 }
+
+//------------------------------------------------------------------------------

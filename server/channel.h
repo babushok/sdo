@@ -21,7 +21,7 @@ class Channel {
 
 public:
 
-    enum channel_state {
+    enum class state {
         error_state, idle_state, measure_state, busy_state
     };
 
@@ -29,9 +29,9 @@ public:
 
     auto set_range(int range)
     {
-        if (!check_range(range)) return Error::invalid_channel_range;
+        if (!check_range(range)) return Error::type::invalid_channel_range;
         _range = range;
-        return Error::no_error;
+        return Error::type::no_error;
     }
 
 //------------------------------------------------------------------------------
@@ -53,10 +53,10 @@ public:
         std::uniform_int_distribution<> distribution(bound0, bound1);
 
         auto state = distribution(generator);
-        if (error_state_val == state) return Channel::error_state;
-        if (busy_state_val == state) return Channel::busy_state;
+        if (error_state_val == state) return Channel::state::error_state;
+        if (busy_state_val == state) return Channel::state::busy_state;
 
-        return static_cast<channel_state>(_state);
+        return static_cast<Channel::state>(_state);
     };
 
 //------------------------------------------------------------------------------
@@ -74,26 +74,29 @@ public:
 
     auto start_measure()
     {
-        if (Channel::idle_state != get_state()) return Error::invalid_channel_state;
-        _state = Channel::measure_state;
-        return Error::no_error;
+        if (Channel::state::idle_state != get_state()) return Error::type::invalid_channel_state;
+        _state = Channel::state::measure_state;
+        return Error::type::no_error;
     }
 
 //------------------------------------------------------------------------------
 
     auto stop_measure()
     {
-        if (Channel::measure_state != get_state()) return Error::invalid_channel_state;
-        _state = Channel::idle_state;
-        return Error::no_error;
+        if (Channel::state::measure_state != get_state()) return Error::type::invalid_channel_state;
+        _state = Channel::state::idle_state;
+        return Error::type::no_error;
     }
 
 //------------------------------------------------------------------------------
 
-    static auto channel_state_string(channel_state state)
+    static auto channel_state_string(state state)
     {
-        static const char* channel_state_strings[] = {"error_state", "idle_state", "measure_state", "busy_state"};
-        return channel_state_strings[state];
+        static const std::map<Channel::state, std::string> channel_state_strings = {{state::error_state,   "error_state"},
+                                                                                    {state::idle_state,    "idle_state"},
+                                                                                    {state::measure_state, "measure_state"},
+                                                                                    {state::busy_state,    "busy_state"}};
+        return channel_state_strings.find(state)->second;
     }
 
 //------------------------------------------------------------------------------
@@ -111,7 +114,7 @@ private:
                                              {0.001,       0.999},
                                              {1,           999},
                                              {1'000,       999'999}};
-    channel_state _state{idle_state};
+    state _state{state::idle_state};
     int _range{0};
 
 //------------------------------------------------------------------------------
@@ -120,17 +123,17 @@ private:
 
 //------------------------------------------------------------------------------
 
-std::ostream &operator<<(std::ostream &out, const Channel::channel_state &t)
+std::ostream &operator<<(std::ostream &out, const Channel::state &t)
 {
     switch (t)
     {
-        case Channel::error_state:
+        case Channel::state::error_state:
             return (out << "error_state");
-        case Channel::idle_state:
+        case Channel::state::idle_state:
             return (out << "idle_state");
-        case Channel::measure_state:
+        case Channel::state::measure_state:
             return (out << "measure_state");
-        case Channel::busy_state:
+        case Channel::state::busy_state:
             return (out << "busy_state");
     }
     return (out);

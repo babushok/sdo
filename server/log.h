@@ -54,15 +54,15 @@ struct Log {
 
     static auto make_reply_string(result_t log_result)
     {
-        return (std::get<0>(log_result) == Error::no_error ? "ok"s : "fail"s) +
-               (std::get<1>(log_result).length() ? ", "s + std::get<1>(log_result) : ""s);
+        return (std::get<ERROR_POS>(log_result) == Error::type::no_error ? "ok"s : "fail"s) +
+               (std::get<VALUE_POS>(log_result).length() ? ", "s + std::get<VALUE_POS>(log_result) : ""s);
     }
 
 //------------------------------------------------------------------------------
 
     static auto result(result_t log_result)
     {
-        auto error = std::get<0>(log_result);
+        auto error = std::get<ERROR_POS>(log_result);
 
         if (Error::success(error))
             info("Request processing: "s + Error::strerror(error));

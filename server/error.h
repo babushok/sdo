@@ -4,6 +4,7 @@
 
 //------------------------------------------------------------------------------
 
+#include <map>
 #include <tuple>
 
 //------------------------------------------------------------------------------
@@ -16,7 +17,7 @@ struct [[nodiscard]] Error {
 
 //------------------------------------------------------------------------------
 
-    enum error {
+    enum class type {
         no_error,
         invalid_channel_range,
         invalid_channel_state,
@@ -38,61 +39,42 @@ struct [[nodiscard]] Error {
 
 //------------------------------------------------------------------------------
 
-    static auto strerror(Error::error error)
+    static auto strerror(Error::type error)
     {
-        switch (error)
-        {
-            case no_error:
-                return "Success"s;
-            case invalid_channel_range:
-                return "Invalid channel range"s;
-            case invalid_channel_state:
-                return "Invalid channel state"s;
-            case invalid_channel_number:
-                return "Invalid channel number"s;
-            case invalid_argument_count:
-                return "Invalid request arguments count"s;
-            case invalid_argument:
-                return "Invalid command argument"s;
-            case invalid_command:
-                return "Invalid command"s;
-            case server_socket_failed:
-                return "Server: socket() failed"s;
-            case server_bind_failed:
-                return "Server: bind() failed"s;
-            case server_listen_failed:
-                return "Server: listen() failed"s;
-            case server_sigaction_failed:
-                return "Server: sigaction() failed"s;
-            case server_accept_failed:
-                return "Server: accept() failed"s;
-            case client_socket_failed:
-                return "Client: socket() failed"s;
-            case client_bind_failed:
-                return "Client: bind() failed"s;
-            case client_connect_failed:
-                return "Client: connect() failed"s;
-            case client_recv_failed:
-                return "Client: recv() failed"s;
-            case client_send_failed:
-                return "Server: send() failed"s;
-        }
-        return "Undefined error"s;
+        static const std::map <Error::type, std::string> error_strings = {
+                {type::no_error,                "Success"},
+                {type::invalid_channel_range,   "Invalid channel range"},
+                {type::invalid_channel_state,   "Invalid channel state"},
+                {type::invalid_channel_number,  "Invalid channel number"},
+                {type::invalid_argument_count,  "Invalid request arguments count"},
+                {type::invalid_argument,        "Invalid command argument"},
+                {type::invalid_command,         "Invalid command"},
+                {type::server_socket_failed,    "Server: socket() failed"},
+                {type::server_bind_failed,      "Server: bind() failed"},
+                {type::server_listen_failed,    "Server: listen() failed"},
+                {type::server_sigaction_failed, "Server: sigaction() failed"},
+                {type::server_accept_failed,    "Server: accept() failed"},
+                {type::client_socket_failed,    "Client: socket() failed"},
+                {type::client_bind_failed,      "Client: bind() failed"},
+                {type::client_connect_failed,   "Client: connect() failed"},
+                {type::client_recv_failed,      "Client: recv() failed"},
+                {type::client_send_failed,      "Server: send() failed"}};
+
+        return error_strings.find(error)->second;
     }
 
 //------------------------------------------------------------------------------
 
-    static auto success(Error::error error)
+    static auto success(Error::type error)
     {
-        return error == no_error;
+        return error == type::no_error;
     }
 
 //------------------------------------------------------------------------------
-
 
     static auto strerror(int error)
     {
-        return strerror(static_cast<Error::error>(error));
+        return strerror(static_cast<Error::type>(error));
     }
 
 //------------------------------------------------------------------------------
@@ -101,6 +83,9 @@ struct [[nodiscard]] Error {
 
 //------------------------------------------------------------------------------
 
-using result_t = std::tuple<Error::error, std::string>;
+#define ERROR_POS 0
+#define VALUE_POS 1
+
+using result_t = std::tuple<Error::type, std::string>;
 
 //------------------------------------------------------------------------------

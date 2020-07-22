@@ -1,4 +1,8 @@
+//------------------------------------------------------------------------------
+
 #include "server.h"
+
+//------------------------------------------------------------------------------
 
 int main()
 {
@@ -10,10 +14,12 @@ int main()
     {
         Log::error(Error::strerror(result));
         perror(Error::strerror(result).c_str());
-        if (result != Error::server_sigaction_failed) exit(EXIT_FAILURE);
+        if (result != Error::type::server_sigaction_failed) exit(EXIT_FAILURE);
     }
 
     server.run();
 
     return 0;
 }
+
+//------------------------------------------------------------------------------
