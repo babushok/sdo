@@ -24,7 +24,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    auto set_channel_range(int channel_number, int range)
+    result_t set_channel_range(int channel_number, int range)
     {
         const auto range_string = "range"s;
         auto result = Error::type::no_error;
@@ -41,7 +41,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    auto start_channel_measure(int channel_number)
+    result_t start_channel_measure(int channel_number)
     {
         auto result = Error::type::no_error;
         if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
@@ -51,7 +51,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    auto stop_channel_measure(int channel_number)
+    result_t stop_channel_measure(int channel_number)
     {
         auto result = Error::type::no_error;
         if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
@@ -61,7 +61,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    auto get_channel_state(int channel_number)
+    result_t get_channel_state(int channel_number)
     {
         auto result = Error::type::no_error;
         auto state = ""s;
@@ -75,7 +75,7 @@ public:
 
 //------------------------------------------------------------------------------
 
-    auto get_channel_value(int channel_number)
+    result_t get_channel_value(int channel_number)
     {
         auto result = Error::type::no_error;
         auto value = ""s;
@@ -95,18 +95,6 @@ public:
 
 //------------------------------------------------------------------------------
 
-    Multimeter()
-    {
-        _commands = {{"start_measure", &Multimeter::start_channel_measure},
-                     {"stop_measure",  &Multimeter::stop_channel_measure},
-                     {"get_status",    &Multimeter::get_channel_state},
-                     {"get_result",    &Multimeter::get_channel_value}};
-
-        _commands_ex = {{"set_range", &Multimeter::set_channel_range}};
-    }
-
-//------------------------------------------------------------------------------
-
     [[nodiscard]] const std::map<std::string, func_t>* commands() const { return &_commands; }
 
     [[nodiscard]] const std::map<std::string, func_ex_t>* commands_ex() const { return &_commands_ex; }
@@ -122,8 +110,11 @@ private:
 
 //------------------------------------------------------------------------------
 
-    std::map<std::string, func_t> _commands;
-    std::map<std::string, func_ex_t> _commands_ex;
+    std::map<std::string, func_t> _commands = {{"start_measure", &Multimeter::start_channel_measure},
+                                               {"stop_measure",  &Multimeter::stop_channel_measure},
+                                               {"get_status",    &Multimeter::get_channel_state},
+                                               {"get_result",    &Multimeter::get_channel_value}};
+    std::map<std::string, func_ex_t> _commands_ex = {{"set_range", &Multimeter::set_channel_range}};
 
     std::array<Channel, CHANNEL_COUNT> channels;
 
