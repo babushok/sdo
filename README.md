@@ -52,6 +52,7 @@ Available console client commands:
 | get_status   | channelN         |Get channel state      |
 | get_result   | channelN         |Get channel voltage value|
 | set_range    | channelN, rangeM |Set channel voltage measuring range|
+
 The channel is specified as a channel[integer from 0 to N-1], for example, "channel0",
 "channel1",..., "channel7". Measurement channel range - range[integer from 0
 to M-1], where M is 4: "range0", "range1", "range2", "range3".
@@ -113,7 +114,7 @@ The project is made using С++17 standard, STL and Unix domain sockets data comm
 
 ## Project setup
 The number of server channels and the server application name is set in the CMake configuration file `./src/server/CMakeLists.txt`:
-```
+```sh
 set(CHANNEL_COUNT 5)
 
 set(SERVER_APP_NAME "server_cli")
@@ -122,7 +123,7 @@ The client determines the number of server channels in runtime.
 
 ## Extend command list
 To provide a simple implementation of the command list extension the server was designed using a command pattern and callback functions. To add a new command you need to insert a pair <command string, function reference> into the map in multimeter class `.src/server/include/multimeter.h`:
-```
+```C++
 const std::map <std::string, func_t> commands_ = {{"command", &function}};
 
 const std::map <std::string, func_ex_t> commands_ex_ = {{"command", &function}};
