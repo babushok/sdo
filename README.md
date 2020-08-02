@@ -123,7 +123,7 @@ set(SERVER_APP_NAME "server_cli")
 The client determines the number of server channels in runtime.
 
 ## Extend command list
-To provide a simple implementation of the command list extension the server was designed using a command pattern and callback functions. To add a new command you need to insert a pair <command string, function reference> into the map in multimeter class `.src/server/include/multimeter.h`:
+To provide a simple implementation of the command list extension the server was designed using a command pattern and callback functions. To add a new command you need to insert a pair <command string, function reference> into the map in multimeter class `./src/server/include/multimeter.h`:
 ```C++
 const std::map <std::string, func_t> commands_ = {{"command", &function}};
 
