@@ -56,6 +56,7 @@ Available console client commands:
 The channel is specified as a channel[integer from 0 to N-1], for example, "channel0",
 "channel1",..., "channel7". Measurement channel range - range[integer from 0
 to M-1], where M is 4: "range0", "range1", "range2", "range3".
+
 ----
 
 > QML client
@@ -114,7 +115,7 @@ The project is made using С++17 standard, STL and Unix domain sockets data comm
 
 ## Project setup
 The number of server channels and the server application name is set in the CMake configuration file `./src/server/CMakeLists.txt`:
-```sh
+```C++
 set(CHANNEL_COUNT 5)
 
 set(SERVER_APP_NAME "server_cli")
