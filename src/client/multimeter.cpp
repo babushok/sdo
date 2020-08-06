@@ -70,7 +70,7 @@ void Multimeter::set_channel_count()
 
 //------------------------------------------------------------------------------
 
-Error::type Multimeter::init()
+Error::Type Multimeter::init()
 {
     auto result = client_.init();
 

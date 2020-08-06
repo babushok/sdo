@@ -29,9 +29,9 @@ public:
 
     auto set_range(int range)
     {
-        if (!check_range(range)) return Error::type::invalid_channel_range;
+        if (!check_range(range)) return Error::Type::invalid_channel_range;
         range_ = range;
-        return Error::type::no_error;
+        return Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
@@ -88,18 +88,18 @@ public:
 
     auto start_measure()
     {
-        if (!is_idle_state()) return Error::type::invalid_channel_state;
+        if (!is_idle_state()) return Error::Type::invalid_channel_state;
         state_ = Channel::State::measure;
-        return Error::type::no_error;
+        return Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
 
     auto stop_measure()
     {
-        if (!is_measure_state()) return Error::type::invalid_channel_state;
+        if (!is_measure_state()) return Error::Type::invalid_channel_state;
         state_ = Channel::State::idle;
-        return Error::type::no_error;
+        return Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------

@@ -38,7 +38,7 @@ public:
 
     static auto parse_argument(std::string argument)
     {
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
         auto pos = argument.length() - 1;
 
         while (pos > 0 && std::isdigit(argument[pos]))--pos;
@@ -49,9 +49,9 @@ public:
         {
             if (isdigit(argument[pos]))
                 number = std::atoi(argument.substr(pos, std::string::npos).c_str());
-            else result = Error::type::invalid_argument;
+            else result = Error::Type::invalid_argument;
             argument = argument.substr(0, pos);
-        } else result = Error::type::invalid_argument;
+        } else result = Error::Type::invalid_argument;
         return std::make_tuple(result, argument, number);
     }
 
@@ -84,20 +84,20 @@ public:
 
     auto execute() -> result_t override
     {
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
         auto channel = ""s;
         auto channel_number = 0;
         std::tie(result, channel, channel_number) = parse_argument(_channel);
         if (Error::success(result))
         {
-            if (channel != FIRST_ARG_STR) result = Error::type::invalid_argument;
+            if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
             else
             {
                 auto command = *multimeter.commands()->find(_command);
                 if (_command == command.first) std::tie(result, channel) = command.second(multimeter, channel_number);
                 else
                 {
-                    result = Error::type::invalid_command;
+                    result = Error::Type::invalid_command;
                     channel = _command;
                 }
             }
@@ -132,7 +132,7 @@ public:
 
     auto execute() -> result_t override
     {
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
         auto channel = ""s;
         auto channel_number = 0;
         auto argument = ""s;
@@ -140,7 +140,7 @@ public:
         std::tie(result, channel, channel_number) = parse_argument(_channel);
         if (Error::success(result))
         {
-            if (channel != FIRST_ARG_STR) result = Error::type::invalid_argument;
+            if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
             else
             {
                 std::tie(result, argument, argument_value) = parse_argument(_argument);
@@ -148,7 +148,7 @@ public:
                 {
                     if (_command.find(argument) == std::string::npos)
                     {
-                        result = Error::type::invalid_argument;
+                        result = Error::Type::invalid_argument;
                         channel = argument;
                     } else
                     {
@@ -157,7 +157,7 @@ public:
                             std::tie(result, channel) = command_ex.second(multimeter, channel_number, argument_value);
                         else
                         {
-                            result = Error::type::invalid_command;
+                            result = Error::Type::invalid_command;
                             channel = _command;
                         }
                     }
@@ -181,4 +181,3 @@ private:
 };  //End of class Channel_command_ex
 
 //------------------------------------------------------------------------------
-

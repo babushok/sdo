@@ -117,7 +117,7 @@ public:
     explicit Multimeter(QObject *parent = nullptr) : QObject(parent), client_{"client_qml"} { }
     ~Multimeter();
 
-    Error::type init();
+    Error::Type init();
 
     QVector<Channel> channels() const;
 

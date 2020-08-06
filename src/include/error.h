@@ -22,7 +22,7 @@ struct [[nodiscard]] Error {
 
 //------------------------------------------------------------------------------
 
-    enum class type {
+    enum class Type {
         no_error,
         invalid_channel_range,
         invalid_channel_state,
@@ -44,7 +44,7 @@ struct [[nodiscard]] Error {
 
 //------------------------------------------------------------------------------
 
-    static auto strerror(Error::type error)
+    static auto strerror(Error::Type error)
     {
         return error_strings_.find(error)->second;
     }
@@ -53,33 +53,33 @@ struct [[nodiscard]] Error {
 
     static auto strerror(int error)
     {
-        return strerror(static_cast<Error::type>(error));
+        return strerror(static_cast<Error::Type>(error));
     }
 
 //------------------------------------------------------------------------------
 
-    static auto strerror(const std::tuple <Error::type, std::string> &error)
+    static auto strerror(const std::tuple <Error::Type, std::string> &error)
     {
         return strerror(std::get<ERROR_POS>(error));
     }
 
 //------------------------------------------------------------------------------
 
-    static auto success(Error::type error)
+    static auto success(Error::Type error)
     {
-        return error == type::no_error;
+        return error == Type::no_error;
     }
 
 //------------------------------------------------------------------------------
 
-    static auto success(const std::tuple <Error::type, std::string> &error)
+    static auto success(const std::tuple <Error::Type, std::string> &error)
     {
         return success(std::get<ERROR_POS>(error));
     }
 
 //------------------------------------------------------------------------------
 
-    static auto value(const std::tuple <Error::type, std::string> &value)
+    static auto value(const std::tuple <Error::Type, std::string> &value)
     {
         return std::get<VALUE_POS>(value);
     }
@@ -88,24 +88,24 @@ struct [[nodiscard]] Error {
 
 private:
 
-    static inline const std::map <Error::type, std::string> error_strings_ = {
-            {type::no_error,                "Success"},
-            {type::invalid_channel_range,   "Invalid channel range"},
-            {type::invalid_channel_state,   "Invalid channel state"},
-            {type::invalid_channel_number,  "Invalid channel number"},
-            {type::invalid_argument_count,  "Invalid request arguments count"},
-            {type::invalid_argument,        "Invalid command argument"},
-            {type::invalid_command,         "Invalid command"},
-            {type::server_socket_failed,    "Server: socket() failed"},
-            {type::server_bind_failed,      "Server: bind() failed"},
-            {type::server_listen_failed,    "Server: listen() failed"},
-            {type::server_sigaction_failed, "Server: sigaction() failed"},
-            {type::server_accept_failed,    "Server: accept() failed"},
-            {type::client_socket_failed,    "Client: socket() failed"},
-            {type::client_bind_failed,      "Client: bind() failed"},
-            {type::client_connect_failed,   "Client: connect() failed"},
-            {type::client_recv_failed,      "Client: recv() failed"},
-            {type::client_send_failed,      "Server: send() failed"}};
+    static inline const std::map <Error::Type, std::string> error_strings_ = {
+            {Type::no_error,                "Success"},
+            {Type::invalid_channel_range,   "Invalid channel range"},
+            {Type::invalid_channel_state,   "Invalid channel state"},
+            {Type::invalid_channel_number,  "Invalid channel number"},
+            {Type::invalid_argument_count,  "Invalid request arguments count"},
+            {Type::invalid_argument,        "Invalid command argument"},
+            {Type::invalid_command,         "Invalid command"},
+            {Type::server_socket_failed,    "Server: socket() failed"},
+            {Type::server_bind_failed,      "Server: bind() failed"},
+            {Type::server_listen_failed,    "Server: listen() failed"},
+            {Type::server_sigaction_failed, "Server: sigaction() failed"},
+            {Type::server_accept_failed,    "Server: accept() failed"},
+            {Type::client_socket_failed,    "Client: socket() failed"},
+            {Type::client_bind_failed,      "Client: bind() failed"},
+            {Type::client_connect_failed,   "Client: connect() failed"},
+            {Type::client_recv_failed,      "Client: recv() failed"},
+            {Type::client_send_failed,      "Server: send() failed"}};
 
 //------------------------------------------------------------------------------
 
@@ -113,6 +113,6 @@ private:
 
 //------------------------------------------------------------------------------
 
-using result_t = std::tuple<Error::type, std::string>;
+using result_t = std::tuple<Error::Type, std::string>;
 
 //------------------------------------------------------------------------------

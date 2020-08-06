@@ -28,7 +28,7 @@ public:
         struct sigaction sa;
         const int backlog = 10;
 
-        if (-1 == (server_sock = socket(AF_UNIX, SOCK_STREAM, 0))) return Error::type::server_socket_failed;
+        if (-1 == (server_sock = socket(AF_UNIX, SOCK_STREAM, 0))) return Error::Type::server_socket_failed;
 
         memset(&server_sockaddr, 0, sizeof(server_sockaddr));
         server_sockaddr.sun_family = AF_UNIX;
@@ -38,21 +38,21 @@ public:
         if (-1 == bind(server_sock, (struct sockaddr*) &server_sockaddr, sizeof(server_sockaddr)))
         {
             close(server_sock);
-            return Error::type::server_bind_failed;
+            return Error::Type::server_bind_failed;
         }
 
         if (-1 == listen(server_sock, backlog))
         {
             close(server_sock);
-            return Error::type::server_listen_failed;
+            return Error::Type::server_listen_failed;
         }
 
         sa.sa_handler = sigchld_handler;
         sigemptyset(&sa.sa_mask);
         sa.sa_flags = SA_RESTART;
-        if (sigaction(SIGCHLD, &sa, NULL) == -1) return Error::type::server_sigaction_failed;
+        if (sigaction(SIGCHLD, &sa, NULL) == -1) return Error::Type::server_sigaction_failed;
 
-        return Error::type::no_error;
+        return Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
@@ -73,8 +73,8 @@ public:
             addrlen = sizeof client_sockaddr;
             if (-1 == (client_sock = accept(server_sock, (struct sockaddr*) &client_sockaddr, &addrlen)))
             {
-                Log::error(Error::strerror(Error::type::server_accept_failed));
-                perror(Error::strerror(Error::type::server_accept_failed).c_str());
+                Log::error(Error::strerror(Error::Type::server_accept_failed));
+                perror(Error::strerror(Error::Type::server_accept_failed).c_str());
                 continue;
             }
 
@@ -96,8 +96,8 @@ public:
                 {
                     if (-1 == (buf_len = recv(client_sock, buf, sizeof(buf), 0)))
                     {
-                        Log::error(Error::strerror(Error::type::client_recv_failed));
-                        perror(Error::strerror(Error::type::client_recv_failed).c_str());
+                        Log::error(Error::strerror(Error::Type::client_recv_failed));
+                        perror(Error::strerror(Error::Type::client_recv_failed).c_str());
                     }
 
                     buf[buf_len] = '\0';
@@ -116,8 +116,8 @@ public:
 
                     if (!Error::success(send_all(client_sock, reply_string.c_str(), reply_string.length())))
                     {
-                        Log::error(Error::strerror(Error::type::client_send_failed));
-                        perror(Error::strerror(Error::type::client_send_failed).c_str());
+                        Log::error(Error::strerror(Error::Type::client_send_failed));
+                        perror(Error::strerror(Error::Type::client_send_failed).c_str());
                     }
                 }
 
@@ -169,7 +169,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    Error::type send_all(int sockaddr, const char* buf, int len)
+    Error::Type send_all(int sockaddr, const char* buf, int len)
     {
         auto total = 0;
         auto bytesleft = len;
@@ -183,7 +183,7 @@ private:
             bytesleft -= n;
         }
 
-        return n == -1 ? Error::type::client_send_failed : Error::type::no_error;
+        return n == -1 ? Error::Type::client_send_failed : Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
@@ -205,7 +205,7 @@ private:
 
         auto argv = parse_request(std::move(request_string));
 
-        auto error = Error::type::no_error;
+        auto error = Error::Type::no_error;
         auto result = ""s;
         auto command_result = std::make_tuple(error, result);
 
@@ -219,7 +219,7 @@ private:
 
             command_result = _history.back()->execute();
         } else
-            command_result = std::make_tuple(Error::type::invalid_argument_count, ""s);
+            command_result = std::make_tuple(Error::Type::invalid_argument_count, ""s);
 
         Log::result(command_result);
 

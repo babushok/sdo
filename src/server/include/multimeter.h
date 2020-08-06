@@ -27,12 +27,12 @@ public:
     result_t set_channel_range(int channel_number, int range)
     {
         const auto range_string = "range"s;
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
 
-        if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
+        if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else
         {
-            result = static_cast<Error::type>(channels_[channel_number].set_range(range));
+            result = static_cast<Error::Type>(channels_[channel_number].set_range(range));
             range = channels_[channel_number].get_range();
         }
 
@@ -43,8 +43,8 @@ public:
 
     result_t start_channel_measure(int channel_number)
     {
-        auto result = Error::type::no_error;
-        if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
+        auto result = Error::Type::no_error;
+        if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else result = channels_[channel_number].start_measure();
         return std::make_tuple(result, ""s);
     }
@@ -53,8 +53,8 @@ public:
 
     result_t stop_channel_measure(int channel_number)
     {
-        auto result = Error::type::no_error;
-        if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
+        auto result = Error::Type::no_error;
+        if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else result = channels_[channel_number].stop_measure();
         return std::make_tuple(result, ""s);
     }
@@ -63,10 +63,10 @@ public:
 
     result_t get_channel_state(int channel_number)
     {
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
         auto state = ""s;
 
-        if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
+        if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else
             state = Channel::channel_state_string(channels_[channel_number].get_state());
 
@@ -77,15 +77,15 @@ public:
 
     result_t get_channel_value(int channel_number)
     {
-        auto result = Error::type::no_error;
+        auto result = Error::Type::no_error;
         auto value = ""s;
 
-        if (!check_channel_number(channel_number)) result = Error::type::invalid_channel_number;
+        if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else
         {
             result = channels_[channel_number].is_measure_state()
-                     ? Error::type::no_error
-                     : Error::type::invalid_channel_state;
+                     ? Error::Type::no_error
+                     : Error::Type::invalid_channel_state;
             value = std::to_string(channels_[channel_number].get_value());
             value = value.substr(0, 2) == "0." ? value.substr(0, 9) : value.substr(0, value.find('.'));
         }

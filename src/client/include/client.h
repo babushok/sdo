@@ -49,7 +49,7 @@ public:
         struct sockaddr_un client_sockaddr;
         struct sockaddr_un server_sockaddr;
 
-        if (-1 == (client_sock_ = socket(AF_UNIX, SOCK_STREAM, 0))) return Error::type::client_socket_failed;
+        if (-1 == (client_sock_ = socket(AF_UNIX, SOCK_STREAM, 0))) return Error::Type::client_socket_failed;
 
         memset(&client_sockaddr, 0, sizeof(client_sockaddr));
         client_sockaddr.sun_family = AF_UNIX;
@@ -59,7 +59,7 @@ public:
         if (-1 == bind(client_sock_, (struct sockaddr*) &client_sockaddr, sizeof(client_sockaddr)))
         {
             close(client_sock_);
-            return Error::type::client_bind_failed;
+            return Error::Type::client_bind_failed;
         }
 
         memset(&server_sockaddr, 0, sizeof(server_sockaddr));
@@ -69,12 +69,12 @@ public:
         if (-1 == connect(client_sock_, (struct sockaddr*) &server_sockaddr, sizeof(server_sockaddr)))
         {
             close(client_sock_);
-            return Error::type::client_connect_failed;
+            return Error::Type::client_connect_failed;
         }
 
         connected_ = true;
 
-        return Error::type::no_error;
+        return Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public:
 
         buf[0] = '\0';
 
-        if (!connected_) return std::make_tuple(Error::type::client_connect_failed, static_cast<std::string>(buf));
+        if (!connected_) return std::make_tuple(Error::Type::client_connect_failed, static_cast<std::string>(buf));
 
         Log::info(message_string(Message::send) + request_string);
 
@@ -99,7 +99,7 @@ public:
             if (-1 == (buf_len = recv(client_sock_, buf, sizeof(buf), 0)))
             {
                 buf_len = 0;
-                result = Error::type::client_recv_failed;
+                result = Error::Type::client_recv_failed;
                 message = Message::recv_fail;
                 connected_ = false;
                 close(client_sock_);
@@ -184,7 +184,7 @@ private:
 
 //------------------------------------------------------------------------------
 
-    Error::type send_all(int sockaddr, const char* buf, int len)
+    Error::Type send_all(int sockaddr, const char* buf, int len)
     {
         auto total = 0;
         auto bytesleft = len;
@@ -198,7 +198,7 @@ private:
             bytesleft -= n;
         }
 
-        return n == -1 ? Error::type::client_send_failed : Error::type::no_error;
+        return n == -1 ? Error::Type::client_send_failed : Error::Type::no_error;
     }
 
 //------------------------------------------------------------------------------
