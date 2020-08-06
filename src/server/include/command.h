@@ -78,7 +78,7 @@ class Channel_command : public Command {
 public:
 
     Channel_command(Multimeter &m, std::string command, std::string channel)
-            : Command(m), command_(std::move(command)), channel_(std::move(channel)) {}
+            : Command(m), _command(std::move(command)), _channel(std::move(channel)) {}
 
 //------------------------------------------------------------------------------
 
@@ -87,24 +87,18 @@ public:
         auto result = Error::type::no_error;
         auto channel = ""s;
         auto channel_number = 0;
-        std::tie(result, channel, channel_number) = parse_argument(channel_);
+        std::tie(result, channel, channel_number) = parse_argument(_channel);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::type::invalid_argument;
             else
             {
-                Multimeter::func_t function = nullptr;
-                for (const auto&[cmd, func] : *multimeter.commands())
-                    if (cmd == command_)
-                    {
-                        function = func;
-                        break;
-                    }
-                if (function) std::tie(result, channel) = function(multimeter, channel_number);
+                auto command = *multimeter.commands()->find(_command);
+                if (_command == command.first) std::tie(result, channel) = command.second(multimeter, channel_number);
                 else
                 {
                     result = Error::type::invalid_command;
-                    channel = command_;
+                    channel = _command;
                 }
             }
         }
@@ -116,8 +110,8 @@ public:
 
 private:
 
-    std::string command_;
-    std::string channel_;
+    std::string _command;
+    std::string _channel;
 
 //------------------------------------------------------------------------------
 
@@ -132,7 +126,7 @@ class Channel_command_ex : public Command {
 public:
 
     Channel_command_ex(Multimeter &m, std::string command, std::string channel, std::string argument)
-            : Command(m), command_(std::move(command)), channel_(std::move(channel)), argument_(std::move(argument)) {}
+            : Command(m), _command(std::move(command)), _channel(std::move(channel)), _argument(std::move(argument)) {}
 
 //------------------------------------------------------------------------------
 
@@ -143,33 +137,28 @@ public:
         auto channel_number = 0;
         auto argument = ""s;
         auto argument_value = 0;
-        std::tie(result, channel, channel_number) = parse_argument(channel_);
+        std::tie(result, channel, channel_number) = parse_argument(_channel);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::type::invalid_argument;
             else
             {
-                std::tie(result, argument, argument_value) = parse_argument(argument_);
+                std::tie(result, argument, argument_value) = parse_argument(_argument);
                 if (Error::success(result))
                 {
-                    if (command_.find(argument) == std::string::npos)
+                    if (_command.find(argument) == std::string::npos)
                     {
                         result = Error::type::invalid_argument;
                         channel = argument;
                     } else
                     {
-                        Multimeter::func_ex_t function = nullptr;
-                        for (const auto&[cmd, func] : *multimeter.commands_ex())
-                            if (cmd == command_)
-                            {
-                                function = func;
-                                break;
-                            }
-                        if (function) std::tie(result, channel) = function(multimeter, channel_number, argument_value);
+                        auto command_ex = *multimeter.commands_ex()->find(_command);
+                        if (_command == command_ex.first)
+                            std::tie(result, channel) = command_ex.second(multimeter, channel_number, argument_value);
                         else
                         {
                             result = Error::type::invalid_command;
-                            channel = command_;
+                            channel = _command;
                         }
                     }
                 }
@@ -183,9 +172,9 @@ public:
 
 private:
 
-    std::string command_;
-    std::string channel_;
-    std::string argument_;
+    std::string _command;
+    std::string _channel;
+    std::string _argument;
 
 //------------------------------------------------------------------------------
 
