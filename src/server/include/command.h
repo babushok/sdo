@@ -78,7 +78,7 @@ class Channel_command : public Command {
 public:
 
     Channel_command(Multimeter &m, std::string command, std::string channel)
-            : Command(m), _command(std::move(command)), _channel(std::move(channel)) {}
+            : Command(m), command_(std::move(command)), channel_(std::move(channel)) {}
 
 //------------------------------------------------------------------------------
 
@@ -87,18 +87,18 @@ public:
         auto result = Error::Type::no_error;
         auto channel = ""s;
         auto channel_number = 0;
-        std::tie(result, channel, channel_number) = parse_argument(_channel);
+        std::tie(result, channel, channel_number) = parse_argument(channel_);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
             else
             {
-                auto command = *multimeter.commands()->find(_command);
-                if (_command == command.first) std::tie(result, channel) = command.second(multimeter, channel_number);
+                auto command = *multimeter.commands()->find(command_);
+                if (command_ == command.first) std::tie(result, channel) = command.second(multimeter, channel_number);
                 else
                 {
                     result = Error::Type::invalid_command;
-                    channel = _command;
+                    channel = command_;
                 }
             }
         }
@@ -110,8 +110,8 @@ public:
 
 private:
 
-    std::string _command;
-    std::string _channel;
+    std::string command_;
+    std::string channel_;
 
 //------------------------------------------------------------------------------
 
@@ -126,7 +126,7 @@ class Channel_command_ex : public Command {
 public:
 
     Channel_command_ex(Multimeter &m, std::string command, std::string channel, std::string argument)
-            : Command(m), _command(std::move(command)), _channel(std::move(channel)), _argument(std::move(argument)) {}
+            : Command(m), command_(std::move(command)), channel_(std::move(channel)), argument_(std::move(argument)) {}
 
 //------------------------------------------------------------------------------
 
@@ -137,28 +137,28 @@ public:
         auto channel_number = 0;
         auto argument = ""s;
         auto argument_value = 0;
-        std::tie(result, channel, channel_number) = parse_argument(_channel);
+        std::tie(result, channel, channel_number) = parse_argument(channel_);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
             else
             {
-                std::tie(result, argument, argument_value) = parse_argument(_argument);
+                std::tie(result, argument, argument_value) = parse_argument(argument_);
                 if (Error::success(result))
                 {
-                    if (_command.find(argument) == std::string::npos)
+                    if (command_.find(argument) == std::string::npos)
                     {
                         result = Error::Type::invalid_argument;
                         channel = argument;
                     } else
                     {
-                        auto command_ex = *multimeter.commands_ex()->find(_command);
-                        if (_command == command_ex.first)
+                        auto command_ex = *multimeter.commands_ex()->find(command_);
+                        if (command_ == command_ex.first)
                             std::tie(result, channel) = command_ex.second(multimeter, channel_number, argument_value);
                         else
                         {
                             result = Error::Type::invalid_command;
-                            channel = _command;
+                            channel = command_;
                         }
                     }
                 }
@@ -172,9 +172,9 @@ public:
 
 private:
 
-    std::string _command;
-    std::string _channel;
-    std::string _argument;
+    std::string command_;
+    std::string channel_;
+    std::string argument_;
 
 //------------------------------------------------------------------------------
 
