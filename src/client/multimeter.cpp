@@ -176,9 +176,8 @@ QStringList Multimeter::available_channel_list()
 
     for(auto channel_number=0; channel_number<get_channel_count(); ++channel_number)
     {
-        auto present = false;
-        for(auto& channel:channels_) if((present=(channel.number==channel_number))) break;
-        if(!present) channels_list << QString::number(channel_number);
+        auto available_channel = std::find_if(channels_.begin(), channels_.end(), [=](auto channel){return channel.number==channel_number;});
+        if(available_channel==channels_.end()) channels_list << QString::number(channel_number);
     }
 
     return channels_list;
@@ -192,9 +191,8 @@ QStringList Multimeter::busy_channel_list()
 
     for(auto channel_number=0; channel_number<get_channel_count(); ++channel_number)
     {
-        auto busy = false;
-        for(auto& channel:channels_) if((busy=(channel.number==channel_number))) break;
-        if(busy) channels_list << QString::number(channel_number);
+        auto busy_channel = std::find_if(channels_.begin(), channels_.end(), [=](auto channel){return channel.number==channel_number;});
+        if(busy_channel!=channels_.end()) channels_list << QString::number(channel_number);
     }
 
     return channels_list;
