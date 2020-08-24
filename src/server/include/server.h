@@ -207,7 +207,7 @@ private:
 
         auto error = Error::Type::no_error;
         auto result = ""s;
-        auto command_result = std::make_tuple(error, result);
+        auto command_result = std::tuple(error, result);
 
         if (Command::check_arg_count(argv.size()))
         {
@@ -219,7 +219,7 @@ private:
 
             command_result = _history.back()->execute();
         } else
-            command_result = std::make_tuple(Error::Type::invalid_argument_count, ""s);
+            command_result = std::tuple(Error::Type::invalid_argument_count, ""s);
 
         Log::result(command_result);
 

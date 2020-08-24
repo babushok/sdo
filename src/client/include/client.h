@@ -86,7 +86,7 @@ public:
 
         buf[0] = '\0';
 
-        if (!connected_) return std::make_tuple(Error::Type::client_connect_failed, static_cast<std::string>(buf));
+        if (!connected_) return std::tuple(Error::Type::client_connect_failed, static_cast<std::string>(buf));
 
         Log::info(message_string(Message::send) + request_string);
 
@@ -115,7 +115,7 @@ public:
 
         Log::info(message_string(message) + buf);
 
-        return std::make_tuple(result, static_cast<std::string>(buf));
+        return std::tuple(result, static_cast<std::string>(buf));
     }
 
 //------------------------------------------------------------------------------

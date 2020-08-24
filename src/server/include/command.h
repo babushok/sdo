@@ -52,7 +52,7 @@ public:
             else result = Error::Type::invalid_argument;
             argument = argument.substr(0, pos);
         } else result = Error::Type::invalid_argument;
-        return std::make_tuple(result, argument, number);
+        return std::tuple(result, argument, number);
     }
 
 //------------------------------------------------------------------------------
@@ -84,10 +84,7 @@ public:
 
     auto execute() -> result_t override
     {
-        auto result = Error::Type::no_error;
-        auto channel = ""s;
-        auto channel_number = 0;
-        std::tie(result, channel, channel_number) = parse_argument(channel_);
+	auto [result, channel, channel_number] = parse_argument(channel_);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
@@ -103,7 +100,7 @@ public:
             }
         }
 
-        return std::make_tuple(result, channel);
+        return std::tuple(result, channel);
     }
 
 //------------------------------------------------------------------------------
@@ -132,12 +129,9 @@ public:
 
     auto execute() -> result_t override
     {
-        auto result = Error::Type::no_error;
-        auto channel = ""s;
-        auto channel_number = 0;
         auto argument = ""s;
         auto argument_value = 0;
-        std::tie(result, channel, channel_number) = parse_argument(channel_);
+	auto [result, channel, channel_number] = parse_argument(channel_);
         if (Error::success(result))
         {
             if (channel != FIRST_ARG_STR) result = Error::Type::invalid_argument;
@@ -165,7 +159,7 @@ public:
             }
         }
 
-        return std::make_tuple(result, channel);
+        return std::tuple(result, channel);
     }
 
 //------------------------------------------------------------------------------

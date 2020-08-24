@@ -36,7 +36,7 @@ public:
             range = channels_[channel_number].get_range();
         }
 
-        return std::make_tuple(result, range_string + std::to_string(range));
+        return std::tuple(result, range_string + std::to_string(range));
     }
 
 //------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ public:
         auto result = Error::Type::no_error;
         if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else result = channels_[channel_number].start_measure();
-        return std::make_tuple(result, ""s);
+        return std::tuple(result, ""s);
     }
 
 //------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ public:
         auto result = Error::Type::no_error;
         if (!check_channel_number(channel_number)) result = Error::Type::invalid_channel_number;
         else result = channels_[channel_number].stop_measure();
-        return std::make_tuple(result, ""s);
+        return std::tuple(result, ""s);
     }
 
 //------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ public:
         else
             state = Channel::channel_state_string(channels_[channel_number].get_state());
 
-        return std::make_tuple(result, state);
+        return std::tuple(result, state);
     }
 
 //------------------------------------------------------------------------------
@@ -90,7 +90,7 @@ public:
             value = value.substr(0, 2) == "0." ? value.substr(0, 9) : value.substr(0, value.find('.'));
         }
 
-        return std::make_tuple(result, value);
+        return std::tuple(result, value);
     }
 
 //------------------------------------------------------------------------------
